@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{680ee236-d837-4a56-9863-44e0823ff295}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="huffman.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="huffman_memory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="huffman.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="huffman_memory.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md">
+      <Filter>src</Filter>
+    </None>
+  </ItemGroup>
+</Project>
