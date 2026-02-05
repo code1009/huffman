@@ -90,17 +90,19 @@ int test2() {
     return 0;
 }
 
-int test3() {
-    // 128바이트 랜덤 데이터 테스트
-    printf("\n=== 랜덤 데이터 테스트 (128바이트) ===\n");
+#define TEST3_ARRAY_SIZE 256
+#define TEST3_RANDOM_FACTOR 256
 
-    const size_t array_size = 128;
-    uint8_t random_array[128];
+int test3() {
+    printf("\n=== 랜덤 데이터 테스트 ===\n");
+
+    const size_t array_size = TEST3_ARRAY_SIZE;
+    uint8_t random_array[TEST3_ARRAY_SIZE];
 
     // 랜덤 데이터 생성
     srand((unsigned int)time(NULL));
     for (size_t i = 0; i < array_size; i++) {
-        random_array[i] = rand() % 32;
+        random_array[i] = rand() % TEST3_RANDOM_FACTOR;
     }
 
     printf("원본 랜덤 배열 크기: %zu 바이트\n", array_size);
