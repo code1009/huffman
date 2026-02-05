@@ -38,7 +38,6 @@ void huffman_crt_free(void* ptr)
 {
 	if (ptr != nullptr) {
 		_memory_freed_size += _memory_allocation[ptr];
-		_memory_allocation.erase(ptr);
 	}
 	free(ptr);
 }
@@ -58,6 +57,8 @@ void huffman_crt_memcpy(void* dest, const void* src, size_t num)
 extern "C"
 void huffman_crt_reset_dump(void)
 {
+	_memory_allocation.clear();
+
 	_memory_allocated_size = 0;
 	_memory_freed_size = 0;
 }
@@ -66,6 +67,7 @@ extern "C"
 void huffman_crt_dump(void)
 {
 	printf("Huffman CRT Memory Dump:\n");
-	printf("  Total Allocated: %zu bytes\n", _memory_allocated_size);
-	printf("  Total Freed:     %zu bytes\n", _memory_freed_size);
+	printf("  Allocation count: %zu\n", _memory_allocation.size());
+	printf("  Total Allocated:  %zu bytes\n", _memory_allocated_size);
+	printf("  Total Freed:      %zu bytes\n", _memory_freed_size);
 }
