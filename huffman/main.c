@@ -66,23 +66,39 @@ void test2() {
     uint8_t input[] = { 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04, 0x05, 0x04, 0x05, 0x01, 0x01, 0x01 };
     size_t input_size = sizeof(input);
 
-	test((const uint8_t*)input, input_size);
+    test((const uint8_t*)input, input_size);
 }
 
 void test3() {
     printf("=== 랜덤 데이터 테스트 ===\n");
 
-    #define TEST3_ARRAY_SIZE 128
-    #define TEST3_RANDOM_FACTOR 128
+#define TEST3_SIZE 128
+#define TEST3_FACTOR 64
 
-    const size_t input_size = TEST3_ARRAY_SIZE;
-    uint8_t input[TEST3_ARRAY_SIZE];
+    const size_t input_size = TEST3_SIZE;
+    uint8_t input[TEST3_SIZE];
 
     srand((unsigned int)time(NULL));
     for (size_t i = 0; i < input_size; i++) {
-        input[i] = rand() % TEST3_RANDOM_FACTOR;
+        input[i] = rand() % TEST3_FACTOR;
     }
-    
+
+    test((const uint8_t*)input, input_size);
+}
+
+void test4() {
+    printf("=== 큰 데이터 테스트 ===\n");
+
+#define TEST4_SIZE 512*1024
+#define TEST4_FACTOR 32
+
+    const size_t input_size = TEST4_SIZE;
+    uint8_t input[TEST4_SIZE];
+
+    for (size_t i = 0; i < input_size; i++) {
+		input[i] = (uint8_t)(i % TEST4_FACTOR);
+    }
+
     test((const uint8_t*)input, input_size);
 }
 
@@ -90,6 +106,7 @@ int main() {
     test1();
     test2();
     test3();
+    test4();
 
     return 0;
 }
@@ -115,19 +132,31 @@ int main() {
 압축 해제 크기: 16 바이트
 압축/해제 성공! 데이터가 일치합니다.
 # Huffman CRT Memory Dump:
-  Allocation count: 23
+  Allocation count: 21
   Total Allocated:  1464 bytes
   Total Freed:      1464 bytes
 
 === 랜덤 데이터 테스트 ===
 원본 크기: 128 바이트
-압축 후 크기: 216 바이트
-압축률: -68.75%
-트리 크기: 113 바이트
+압축 후 크기: 154 바이트
+압축률: -20.31%
+트리 크기: 65 바이트
 압축 해제 크기: 128 바이트
 압축/해제 성공! 데이터가 일치합니다.
 # Huffman CRT Memory Dump:
-  Allocation count: 194
-  Total Allocated:  7668 bytes
-  Total Freed:      7668 bytes
+  Allocation count: 172
+  Total Allocated:  5174 bytes
+  Total Freed:      5174 bytes
+
+=== 큰 데이터 테스트 ===
+원본 크기: 524288 바이트
+압축 후 크기: 327720 바이트
+압축률: 37.49%
+트리 크기: 40 바이트
+압축 해제 크기: 524288 바이트
+압축/해제 성공! 데이터가 일치합니다.
+# Huffman CRT Memory Dump:
+  Allocation count: 133
+  Total Allocated:  2952260 bytes
+  Total Freed:      2952260 bytes
 */
