@@ -6,6 +6,7 @@
 #include <time.h>
 
 int test(const uint8_t* input, size_t input_size) {
+    huffman_crt_reset_dump();
 
     printf("원본 크기: %zu 바이트\n", input_size);
 
@@ -46,6 +47,7 @@ int test(const uint8_t* input, size_t input_size) {
     huffman_free_compressed(compressed);
     huffman_free_decompressed(decompressed);
 
+    huffman_crt_dump();
     return 0;
 }
 
@@ -86,17 +88,8 @@ void test3() {
 
 int main() {
     test1();
-    huffman_crt_dump();
-
-    huffman_crt_reset_dump();
-
     test2();
-    huffman_crt_dump();
-
-    huffman_crt_reset_dump();
-
     test3();
-    huffman_crt_dump();
 
     return 0;
 }
