@@ -66,8 +66,9 @@ void huffman_crt_reset_dump(void)
 extern "C"
 void huffman_crt_dump(void)
 {
-	printf("Huffman CRT Memory Dump:\n");
+	printf("# Huffman CRT Memory Dump:\n");
 	printf("  Allocation count: %zu\n", _memory_allocation.size());
 	printf("  Total Allocated:  %zu bytes\n", _memory_allocated_size);
 	printf("  Total Freed:      %zu bytes\n", _memory_freed_size);
+	printf("\n");
 }

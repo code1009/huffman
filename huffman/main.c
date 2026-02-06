@@ -5,21 +5,16 @@
 #include <stdlib.h>
 #include <time.h>
 
-int test1() {
-    // 테스트 데이터
-    const char* test_string = "Hello, Huffman! This is a test string for compression.";
-    size_t input_size = strlen(test_string);
+int test(const uint8_t* input, size_t input_size) {
 
-    printf("=== 허프만 압축 테스트 ===\n");
-    printf("원본 데이터: %s\n", test_string);
-    printf("원본 크기: %zu 바이트\n\n", input_size);
+    printf("원본 크기: %zu 바이트\n", input_size);
 
     huffman_compressed_t* compressed;
     uint8_t* decompressed;
     size_t output_size;
 
     // 압축
-    compressed = huffman_compress((const uint8_t*)test_string, input_size);
+    compressed = huffman_compress((const uint8_t*)input, input_size);
     if (!compressed) {
         printf("압축 실패!\n");
         return -1;
@@ -27,7 +22,7 @@ int test1() {
 
     printf("압축 후 크기: %zu 바이트\n", compressed->size);
     printf("압축률: %.2f%%\n", (1.0 - (double)compressed->size / input_size) * 100);
-    printf("트리 크기: %u 바이트\n\n", compressed->tree_size);
+    printf("트리 크기: %u 바이트\n", compressed->tree_size);
 
     // 해제
     output_size = 0;
@@ -39,130 +34,55 @@ int test1() {
     }
 
     printf("압축 해제 크기: %zu 바이트\n", output_size);
-    printf("압축 해제 데이터: %.*s\n\n", (int)output_size, decompressed);
 
     // 검증
-    if (output_size == input_size && memcmp(test_string, decompressed, input_size) == 0) {
-        printf(" 압축/해제 성공! 데이터가 일치합니다.\n");
+    if (output_size == input_size && memcmp(input, decompressed, input_size) == 0) {
+        printf("압축/해제 성공! 데이터가 일치합니다.\n");
     }
     else {
-        printf(" 압축/해제 실패! 데이터가 일치하지 않습니다.\n");
+        printf("압축/해제 실패! 데이터가 일치하지 않습니다.\n");
     }
 
-    // 메모리 해제
     huffman_free_compressed(compressed);
     huffman_free_decompressed(decompressed);
 
     return 0;
 }
 
-int test2() {
-    // 바이트 배열 테스트
-    printf("\n=== 바이트 배열 테스트 ===\n");
-    uint8_t byte_array[] = { 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03,
-                            0x04, 0x05, 0x04, 0x05, 0x01, 0x01, 0x01 };
-    size_t array_size = sizeof(byte_array);
+void test1() {
+    printf("=== 허프만 압축 테스트 ===\n");
 
-    printf("원본 바이트 배열 크기: %zu 바이트\n", array_size);
+    const char* input = "Hello, Huffman! This is a test string for compression.";
+    size_t input_size = strlen(input);
 
-    huffman_compressed_t* compressed;
-    uint8_t* decompressed;
-    size_t output_size;
-
-    compressed = huffman_compress(byte_array, array_size);
-    if (compressed) {
-        printf("압축 후 크기: %zu 바이트\n", compressed->size);
-        printf("압축률: %.2f%%\n", (1.0 - (double)compressed->size / array_size) * 100);
-
-        decompressed = huffman_decompress(compressed, &output_size);
-        if (decompressed && output_size == array_size &&
-            memcmp(byte_array, decompressed, array_size) == 0) {
-            printf(" 바이트 배열 압축/해제 성공!\n");
-        }
-        else {
-            printf(" 바이트 배열 압축/해제 실패!\n");
-        }
-
-        huffman_free_compressed(compressed);
-        huffman_free_decompressed(decompressed);
-    }
-
-    return 0;
+	test((const uint8_t*)input, input_size);
 }
 
-#define TEST3_ARRAY_SIZE 256
-#define TEST3_RANDOM_FACTOR 256
+void test2() {
+    printf("=== 바이트 배열 테스트 ===\n");
 
-int test3() {
-    printf("\n=== 랜덤 데이터 테스트 ===\n");
+    uint8_t input[] = { 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04, 0x05, 0x04, 0x05, 0x01, 0x01, 0x01 };
+    size_t input_size = sizeof(input);
 
-    const size_t array_size = TEST3_ARRAY_SIZE;
-    uint8_t random_array[TEST3_ARRAY_SIZE];
+	test((const uint8_t*)input, input_size);
+}
 
-    // 랜덤 데이터 생성
+void test3() {
+    printf("=== 랜덤 데이터 테스트 ===\n");
+
+    #define TEST3_ARRAY_SIZE 128
+    #define TEST3_RANDOM_FACTOR 32
+
+    const size_t input_size = TEST3_ARRAY_SIZE;
+    uint8_t input[TEST3_ARRAY_SIZE];
+
     srand((unsigned int)time(NULL));
-    for (size_t i = 0; i < array_size; i++) {
-        random_array[i] = rand() % TEST3_RANDOM_FACTOR;
+    for (size_t i = 0; i < input_size; i++) {
+        input[i] = rand() % TEST3_RANDOM_FACTOR;
     }
-
-    printf("원본 랜덤 배열 크기: %zu 바이트\n", array_size);
-
-    // 첫 16바이트 출력 (미리보기)
-    printf("첫 16바이트: ");
-    for (int i = 0; i < 16; i++) {
-        printf("%02X ", random_array[i]);
-    }
-    printf("\n");
-
-    huffman_compressed_t* compressed;
-    uint8_t* decompressed;
-    size_t output_size;
-
-    // 압축
-    compressed = huffman_compress(random_array, array_size);
-    if (!compressed) {
-        printf("압축 실패!\n");
-        return -1;
-    }
-
-    printf("압축 후 크기: %zu 바이트\n", compressed->size);
-    printf("압축률: %.2f%%\n", (1.0 - (double)compressed->size / array_size) * 100);
-    printf("트리 크기: %u 바이트\n", compressed->tree_size);
-
-    // 압축 해제
-    output_size = 0;
-    decompressed = huffman_decompress(compressed, &output_size);
-    if (!decompressed) {
-        printf("압축 해제 실패!\n");
-        huffman_free_compressed(compressed);
-        return -1;
-    }
-
-    printf("압축 해제 크기: %zu 바이트\n", output_size);
-
-    // 검증
-    if (output_size == array_size && memcmp(random_array, decompressed, array_size) == 0) {
-        printf(" 랜덤 데이터 압축/해제 성공! 데이터가 일치합니다.\n");
-
-        // 해제된 첫 16바이트 확인
-        printf("해제된 첫 16바이트: ");
-        for (int i = 0; i < 16; i++) {
-            printf("%02X ", decompressed[i]);
-        }
-        printf("\n");
-    }
-    else {
-        printf(" 랜덤 데이터 압축/해제 실패! 데이터가 일치하지 않습니다.\n");
-        printf("원본 크기: %zu, 해제 크기: %zu\n", array_size, output_size);
-    }
-
-    // 메모리 해제
-    huffman_free_compressed(compressed);
-    huffman_free_decompressed(decompressed);
-
-    return 0;
+    
+    test((const uint8_t*)input, input_size);
 }
-
 
 int main() {
     test1();
@@ -180,3 +100,41 @@ int main() {
 
     return 0;
 }
+
+/*
+=== 허프만 압축 테스트 ===
+원본 크기: 54 바이트
+압축 후 크기: 57 바이트
+압축률: -5.56%
+트리 크기: 28 바이트
+압축 해제 크기: 54 바이트
+압축/해제 성공! 데이터가 일치합니다.
+# Huffman CRT Memory Dump:
+  Allocation count: 88
+  Total Allocated:  2787 bytes
+  Total Freed:      2787 bytes
+
+=== 바이트 배열 테스트 ===
+원본 크기: 16 바이트
+압축 후 크기: 12 바이트
+압축률: 25.00%
+트리 크기: 7 바이트
+압축 해제 크기: 16 바이트
+압축/해제 성공! 데이터가 일치합니다.
+# Huffman CRT Memory Dump:
+  Allocation count: 22
+  Total Allocated:  1464 bytes
+  Total Freed:      1464 bytes
+
+=== 랜덤 데이터 테스트 ===
+원본 크기: 128 바이트
+압축 후 크기: 119 바이트
+압축률: 7.03%
+트리 크기: 40 바이트
+압축 해제 크기: 128 바이트
+압축/해제 성공! 데이터가 일치합니다.
+# Huffman CRT Memory Dump:
+  Allocation count: 131
+  Total Allocated:  3859 bytes
+  Total Freed:      3859 bytes
+*/
