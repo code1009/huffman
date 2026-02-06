@@ -71,7 +71,7 @@ void test3() {
     printf("=== 랜덤 데이터 테스트 ===\n");
 
     #define TEST3_ARRAY_SIZE 128
-    #define TEST3_RANDOM_FACTOR 32
+    #define TEST3_RANDOM_FACTOR 128
 
     const size_t input_size = TEST3_ARRAY_SIZE;
     uint8_t input[TEST3_ARRAY_SIZE];
@@ -110,7 +110,7 @@ int main() {
 압축 해제 크기: 54 바이트
 압축/해제 성공! 데이터가 일치합니다.
 # Huffman CRT Memory Dump:
-  Allocation count: 88
+  Allocation count: 86
   Total Allocated:  2787 bytes
   Total Freed:      2787 bytes
 
@@ -122,19 +122,19 @@ int main() {
 압축 해제 크기: 16 바이트
 압축/해제 성공! 데이터가 일치합니다.
 # Huffman CRT Memory Dump:
-  Allocation count: 22
+  Allocation count: 23
   Total Allocated:  1464 bytes
   Total Freed:      1464 bytes
 
 === 랜덤 데이터 테스트 ===
 원본 크기: 128 바이트
-압축 후 크기: 119 바이트
-압축률: 7.03%
-트리 크기: 40 바이트
+압축 후 크기: 216 바이트
+압축률: -68.75%
+트리 크기: 113 바이트
 압축 해제 크기: 128 바이트
 압축/해제 성공! 데이터가 일치합니다.
 # Huffman CRT Memory Dump:
-  Allocation count: 131
-  Total Allocated:  3859 bytes
-  Total Freed:      3859 bytes
+  Allocation count: 194
+  Total Allocated:  7668 bytes
+  Total Freed:      7668 bytes
 */
